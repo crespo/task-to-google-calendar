@@ -1,3 +1,4 @@
-api/__pycache__/
-api/migrations/
-db.sqlite3
+taskmaker/taskmaker/__pycache__/
+taskmaker/api/__pycache__/
+taskmaker/api/migrations/
+taskmaker/db.sqlite3
