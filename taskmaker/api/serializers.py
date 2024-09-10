@@ -5,4 +5,4 @@ from .models import Tarefa
 class TarefaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tarefa
-        fields = ["titulo", "descricao", "data", "horario"]
+        fields = ["id", "titulo", "descricao", "data", "horario"]
