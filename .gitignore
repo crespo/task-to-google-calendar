@@ -2,3 +2,5 @@ taskmaker/taskmaker/__pycache__/
 taskmaker/api/__pycache__/
 taskmaker/api/migrations/
 taskmaker/db.sqlite3
+taskmaker/api/credentials.json
+taskmaker/api/token.json
