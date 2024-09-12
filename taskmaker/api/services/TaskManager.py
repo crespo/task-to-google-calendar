@@ -31,7 +31,7 @@ class TaskManager:
         creds = TaskManager.authenticate()
 
         try:
-            service = build("tasks", "v1", credentials=creds)
+            service = TaskManager.buildService(creds)
 
             service.tasks().delete(
                 tasklist=TaskManager.getFirstTasklistID(), task=taskId
@@ -44,7 +44,7 @@ class TaskManager:
         creds = TaskManager.authenticate()
 
         try:
-            service = build("tasks", "v1", credentials=creds)
+            service = TaskManager.buildService(creds)
 
             response = (
                 service.tasks()
@@ -66,7 +66,7 @@ class TaskManager:
 
     def getFirstTasklistID(creds):
         try:
-            service = build("tasks", "v1", credentials=creds)
+            service = TaskManager.buildService(creds)
 
             results = service.tasklists().list(maxResults=10).execute()
             tasklists = results.get("items", [])
@@ -75,6 +75,9 @@ class TaskManager:
 
         except HttpError as err:
             return err
+
+    def buildService(creds):
+        return build("tasks", "v1", credentials=creds)
 
 
 class Task:
