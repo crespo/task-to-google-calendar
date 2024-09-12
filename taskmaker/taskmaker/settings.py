@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "api",
     "rest_framework",
+    "google",
+    "googleapiclient",
+    "api.services",
 ]
 
 MIDDLEWARE = [
