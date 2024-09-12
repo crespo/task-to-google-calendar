@@ -1,4 +1,5 @@
 taskmaker/taskmaker/__pycache__/
+taskmaker/api/services/__pycache__/
 taskmaker/api/__pycache__/
 taskmaker/api/migrations/
 taskmaker/db.sqlite3
