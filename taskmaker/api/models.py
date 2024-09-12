@@ -6,7 +6,4 @@ class Tarefa(models.Model):
     descricao = models.TextField(null=True, blank=True)
     data = models.DateField()
     horario = models.TimeField(null=True, blank=True)
-    task_id = models.CharField(max_length=100)
-
-    # def __str__(self):
-    #     return self.data.strftime("%Y-%m-%d") + "T"
+    task_id = models.CharField(max_length=100, blank=True)
