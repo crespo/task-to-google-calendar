@@ -27,16 +27,17 @@ class TaskManager:
 
         return creds
 
-    def deleteTask(taskId):
+    def deleteTask(task_id):
         creds = TaskManager.authenticate()
 
         try:
             service = TaskManager.buildService(creds)
 
             service.tasks().delete(
-                tasklist=TaskManager.getFirstTasklistID(), task=taskId
+                tasklist=TaskManager.getFirstTasklistID(creds), task=task_id
             ).execute()
 
+            return "Task with: " + task_id + " has been deleted succesfully."
         except HttpError as err:
             return err
 
