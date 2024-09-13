@@ -11,4 +11,12 @@ class TaskSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ["id", "summary", "description", "date", "time", "event_id"]
+        fields = [
+            "id",
+            "summary",
+            "description",
+            "date",
+            "time_start",
+            "time_end",
+            "event_id",
+        ]

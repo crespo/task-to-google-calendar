@@ -1,5 +1,6 @@
 import os.path
 
+from django.http import HttpResponseBadRequest
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -40,7 +41,7 @@ class EventManager:
         except HttpError as err:
             return err
 
-    def buildTime(date, time=None):
+    def buildDate(date, time=None):
         if time is None:
             return {"tag": "date", "content": date}
 
@@ -52,7 +53,16 @@ class EventManager:
         try:
             service = EventManager.buildService(creds)
 
-            time = EventManager.buildTime(event.date, event.time)
+            if (
+                event.time_start is not None
+                and event.time_end is None
+                or event.time_start is None
+                and event.time_end is not None
+            ):
+                raise HttpResponseBadRequest
+
+            date_start = EventManager.buildDate(event.date, event.time_start)
+            date_end = EventManager.buildDate(event.date, event.time_end)
 
             response = (
                 service.events()
@@ -60,8 +70,8 @@ class EventManager:
                     calendarId="primary",
                     body={
                         "summary": event.summary,
-                        "start": {time["tag"]: time["content"]},
-                        "end": {time["tag"]: time["content"]},
+                        "start": {date_start["tag"]: date_start["content"]},
+                        "end": {date_end["tag"]: date_end["content"]},
                         "description": event.description,
                     },
                 )
@@ -79,8 +89,9 @@ class EventManager:
 
 
 class EventBuilder:
-    def __init__(self, summary, date, description=None, time=None):
+    def __init__(self, summary, date, description=None, time_start=None, time_end=None):
         self.summary = summary
         self.date = date
         self.description = description
-        self.time = time
+        self.time_start = time_start
+        self.time_end = time_end

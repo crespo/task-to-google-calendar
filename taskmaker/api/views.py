@@ -126,8 +126,9 @@ class EventView(APIView):
             if "description" in request_data:
                 event.description = request_data["description"]
 
-            if "time" in request_data:
-                event.time = request_data["time"]
+            if "time_start" in request_data and "time_end" in request_data:
+                event.time_start = request_data["time_start"]
+                event.time_end = request_data["time_end"]
 
             CREATE_EVENT_RESPONSE = EventManager.createEvent(event)
 
@@ -174,7 +175,6 @@ class EventRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        print("oi?")
         event = self.get_object(pk)
         serializer = EventSerializer(event, data=request.data)
 
