@@ -3,5 +3,5 @@ taskmaker/api/services/__pycache__/
 taskmaker/api/__pycache__/
 taskmaker/api/migrations/
 taskmaker/db.sqlite3
-taskmaker/credentials.json
-taskmaker/token.json
+taskmaker/api/creds/google-tasks/*.json
+taskmaker/api/creds/google-calendar/*.json
