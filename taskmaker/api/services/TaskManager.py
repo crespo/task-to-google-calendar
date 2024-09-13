@@ -12,17 +12,18 @@ SCOPES = ["https://www.googleapis.com/auth/tasks"]
 class TaskManager:
     def authenticate():
         creds = None
-        token_path = "./api/creds/google-tasks/token.json"
-        creds_path = "./api/creds/google-tasks/credentials.json"
-        if os.path.exists(token_path):
-            creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+        TOKEN_PATH = "./api/creds/google-tasks/token.json"
+        CREDS_PATH = "./api/creds/google-tasks/credentials.json"
+
+        if os.path.exists(TOKEN_PATH):
+            creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
+                flow = InstalledAppFlow.from_client_secrets_file(CREDS_PATH, SCOPES)
                 creds = flow.run_local_server(port=0)
-            with open(token_path, "w") as token:
+            with open(TOKEN_PATH, "w") as token:
                 token.write(creds.to_json())
 
         return creds
