@@ -52,9 +52,9 @@ class TaskManager:
                 .insert(
                     tasklist=TaskManager.getFirstTasklistID(creds),
                     body={
-                        "title": task.titulo,
-                        "notes": task.descricao,
-                        "due": task.data + "T00:00:00.00Z",
+                        "title": task.title,
+                        "notes": task.notes,
+                        "due": task.date + "T00:00:00.00Z",
                     },
                 )
                 .execute()
