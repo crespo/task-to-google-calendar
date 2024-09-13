@@ -1,8 +1,9 @@
-taskmaker/taskmaker/__pycache__/*.*
-taskmaker/api/services/__pycache__/
-taskmaker/api/__pycache__/
+
+*.pyc
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
 taskmaker/api/migrations/
 taskmaker/db.sqlite3
 taskmaker/api/creds/google-tasks/*.json
 taskmaker/api/creds/google-calendar/*.json
-taskmaker/taskmaker/__pycache__/settings.cpython-312.pyc
