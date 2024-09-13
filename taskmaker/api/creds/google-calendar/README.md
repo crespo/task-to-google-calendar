@@ -1,0 +1,1 @@
+# Folder where credentials.json and token.json for Google Calendar integration will be stored.
