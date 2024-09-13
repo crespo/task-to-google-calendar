@@ -1,23 +1,23 @@
 from django.http import Http404
 from rest_framework import generics, status
-from .models import Tarefa
-from .serializers import TarefaSerializer
+from .models import Task
+from .serializers import TaskSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .services.TaskManager import TaskManager, Task
+from .services.TaskManager import TaskManager, TaskBuilder
 from googleapiclient.errors import HttpError
 
 
-class TarefaView(APIView):
+class TaskView(APIView):
     def get(self, request, format=None):
         search = request.query_params.get("search", "")
 
         if search:
-            tarefas = Tarefa.objects.filter(titulo__icontains=search)
+            tasks = Task.objects.filter(title__icontains=search)
         else:
-            tarefas = Tarefa.objects.all()
+            tasks = Task.objects.all()
 
-        serializer = TarefaSerializer(tarefas, many=True)
+        serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
@@ -25,17 +25,17 @@ class TarefaView(APIView):
         request_data = request.data
         errorOccurred = False
 
-        if "titulo" in request_data and "data" in request_data:
-            task = Task(
-                request_data["titulo"],
-                request_data["data"],
+        if "title" in request_data and "date" in request_data:
+            task = TaskBuilder(
+                request_data["title"],
+                request_data["date"],
             )
 
-            if "descricao" in request_data:
-                task.descricao = request_data["descricao"]
+            if "notes" in request_data:
+                task.notes = request_data["notes"]
 
-            if "horario" in request_data:
-                task.horario = request_data["horario"]
+            if "time" in request_data:
+                task.time = request_data["time"]
 
             createTaskResponse = TaskManager.createTask(task)
 
@@ -44,7 +44,7 @@ class TarefaView(APIView):
             else:
                 request_data["task_id"] = createTaskResponse["id"]
 
-        serializer = TarefaSerializer(data=request_data)
+        serializer = TaskSerializer(data=request_data)
 
         if serializer.is_valid():
             if not errorOccurred:
@@ -54,36 +54,36 @@ class TarefaView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TarefaByDateRangeListView(generics.ListAPIView):
-    serializer_class = TarefaSerializer
+class TaskByDateRangeListView(generics.ListAPIView):
+    serializer_class = TaskSerializer
 
     def get_queryset(self):
         start_date = self.kwargs.get("start_date")
         end_date = self.kwargs.get("end_date")
 
-        return Tarefa.objects.filter(data__range=[start_date, end_date])
+        return Task.objects.filter(date__range=[start_date, end_date])
 
 
-class TarefaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Tarefa.objects.all()
-    serializer_class = TarefaSerializer
+class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
     lookup_field = "pk"
 
     def get_object(self, pk):
         try:
-            return Tarefa.objects.get(pk=pk)
-        except Tarefa.DoesNotExist:
+            return Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        tarefa = self.get_object(pk)
-        serializer = TarefaSerializer(tarefa)
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task)
 
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        tarefa = self.get_object(pk)
-        serializer = TarefaSerializer(tarefa, data=request.data)
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -92,8 +92,8 @@ class TarefaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        tarefa = self.get_object(pk)
-        TaskManager.deleteTask(tarefa.task_id)
-        tarefa.delete()
+        task = self.get_object(pk)
+        TaskManager.deleteTask(task.task_id)
+        task.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
