@@ -1,10 +1,11 @@
 from django.http import Http404
 from rest_framework import generics, status
-from .models import Task
-from .serializers import TaskSerializer
+from .models import Task, Event
+from .serializers import TaskSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .services.TaskManager import TaskManager, TaskBuilder
+from .services.EventManager import EventManager, EventBuilder
 from googleapiclient.errors import HttpError
 
 
@@ -37,12 +38,12 @@ class TaskView(APIView):
             if "time" in request_data:
                 task.time = request_data["time"]
 
-            createTaskResponse = TaskManager.createTask(task)
+            CREATE_TASK_RESPONSE = TaskManager.createTask(task)
 
-            if type(createTaskResponse) is HttpError:
+            if type(CREATE_TASK_RESPONSE) is HttpError:
                 errorOccurred = True
             else:
-                request_data["task_id"] = createTaskResponse["id"]
+                request_data["task_id"] = CREATE_TASK_RESPONSE["id"]
 
         serializer = TaskSerializer(data=request_data)
 
@@ -95,5 +96,97 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         task = self.get_object(pk)
         TaskManager.deleteTask(task.task_id)
         task.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class EventView(APIView):
+    def get(self, request, format=None):
+        search = request.query_params.get("search", "")
+
+        if search:
+            events = Event.objects.filter(summary__icontains=search)
+        else:
+            events = Event.objects.all()
+
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, format=None):
+        event = ""
+        request_data = request.data
+        errorOccurred = False
+
+        if "summary" in request_data and "date" in request_data:
+            event = EventBuilder(
+                request_data["summary"],
+                request_data["date"],
+            )
+
+            if "description" in request_data:
+                event.description = request_data["description"]
+
+            if "time" in request_data:
+                event.time = request_data["time"]
+
+            CREATE_EVENT_RESPONSE = EventManager.createEvent(event)
+
+            if type(CREATE_EVENT_RESPONSE) is HttpError:
+                errorOccurred = True
+            else:
+                request_data["event_id"] = CREATE_EVENT_RESPONSE["id"]
+
+        serializer = EventSerializer(data=request_data)
+
+        if serializer.is_valid():
+            if not errorOccurred:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EventByDateRangeListView(generics.ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        start_date = self.kwargs.get("start_date")
+        end_date = self.kwargs.get("end_date")
+
+        return Event.objects.filter(date__range=[start_date, end_date])
+
+
+class EventRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    lookup_field = "pk"
+
+    def get_object(self, pk):
+        try:
+            return Event.objects.get(pk=pk)
+        except Event.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        event = self.get_object(pk)
+        serializer = EventSerializer(event)
+
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        print("oi?")
+        event = self.get_object(pk)
+        serializer = EventSerializer(event, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        event = self.get_object(pk)
+        EventManager.deleteEvent(event.event_id)
+        event.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
