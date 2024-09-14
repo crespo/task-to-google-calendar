@@ -81,7 +81,6 @@ class EventManager:
             return response
 
         except HttpError as err:
-            print(err)
             return err
 
     def buildService(creds):
