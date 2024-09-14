@@ -2,7 +2,7 @@
 ## Description
 This project was initially made for a internship challenge, but I plan to update it and implement new features whenever I feel in the mood to do so.
 
-It features a complete CRUD of tasks and events based on Google Calendar standards, also it synchronizes the tasks and events with your personal Google Calendar agenda, so when you create and delete a individual task or event, it'll be required to login with a Google account and then the API will create the task for you automatically.
+It features a complete CRUD of tasks and events based on Google Calendar standards, also it synchronizes the tasks and events with your personal Google Calendar agenda, so when you create and delete a individual task or event, it'll be required to login with a Google account and then the API will create the task or event for you automatically.
 ## Tech Stack
 To achieve all of this, it was used Python as the base programming language, Django and Django Rest Framework (a.k.a. DRF) as frameworks to help building the API, [Google Calendar API](https://developers.google.com/resources/api-libraries/documentation/calendar/v3/python/latest/index.html) and [Google Tasks API](https://developers.google.com/resources/api-libraries/documentation/tasks/v1/python/latest/index.html) with all the JWT authentication necessary to integrate with Google's endpoints and Swagger UI to make a quick beautiful API documentation page.
 ## Installation
@@ -25,7 +25,7 @@ python3 manage.py makemigrations api
 python3 manage.py migrate api
 python3 manage.py runserver
 ```
-After succesfully running the server, do the [Set up your environment](https://developers.google.com/calendar/api/quickstart/python#set-up-environment) tutorial from Google's API activation tutorial and import the ```credentials.json``` to both ```./taskmaker/api/creds/google-calendar/``` and ```./taskmaker/api/creds/google-tasks/``` directories and you're good to go!
+After successfully running the server, do the [Set up your environment](https://developers.google.com/calendar/api/quickstart/python#set-up-environment) tutorial from Google's API activation tutorial and import the ```credentials.json``` to both ```./taskmaker/api/creds/google-calendar/``` and ```./taskmaker/api/creds/google-tasks/``` directories and you're good to go!
 ## Usage
 You can check [localhost:8000/swagger/](http://localhost:8000/swagger/) to see available endpoints.
 
