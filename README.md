@@ -53,5 +53,17 @@ You can check [localhost:8000/swagger/](http://localhost:8000/swagger/) to see a
 }
 ```
 - The ```notes``` and ```time``` fields are optionals.
-- - ```date``` field should accept ```yyyy-mm-dd``` format.
+- ```date``` field should accept ```yyyy-mm-dd``` format.
 - Note that even though ```time``` field is implemented in this API, it doesn't work. It's there just for a possible future update of Google Tasks' API. [See the reason here](https://issuetracker.google.com/issues/166896024).
+
+| ```GET``` examples to filter by text: |
+| :------------------------------------ |
+| ```{...}/api/v1/events?search=example``` |
+| ```{...}/api/v1/tasks?search=example``` |
+
+
+| ```GET``` examples to filter by date: |
+| :------------------------------------ |
+| ```{...}/api/v1/events/{start_date}/{end_date}/``` |
+| ```{...}/api/v1/tasks/{start_date}/{end_date}/``` |
+| PS.: Dates takes the form of ```yyyy-mm-dd```. |
