@@ -25,3 +25,4 @@ python3 manage.py makemigrations api
 python3 manage.py migrate api
 python3 manage.py runserver
 ```
+After succesfully running the server, do the [Set up your environment](https://developers.google.com/calendar/api/quickstart/python#set-up-environment) tutorial from Google's API activation tutorial and import the credentials.json to both ```./taskmaker/api/creds/google-calendar/``` and ```./taskmaker/api/creds/google-tasks/``` directories and you're good to go!
