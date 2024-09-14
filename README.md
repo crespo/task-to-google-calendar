@@ -7,7 +7,7 @@ It features a complete CRUD of tasks and events based on Google Calendar standar
 To achieve all of this, it was used Python as the base programming language, Django and Django Rest Framework (a.k.a. DRF) as frameworks to help building the API and [Google Calendar API](https://developers.google.com/resources/api-libraries/documentation/calendar/v3/python/latest/index.html) and [Google Tasks API](https://developers.google.com/resources/api-libraries/documentation/tasks/v1/python/latest/index.html) with all the JWT authentication necessary to integrate with Google's endpoints.
 ## Installation
 ### Requirements
-| Resource | Link | Version |
+| Resource | Link | Recommended Version |
 | :------: | :--: | :-----: |
 | Python | [Python's official download page](https://www.python.org/downloads/) | 3.12+ |
 | Pip | [Pip's official documentation](https://pip.pypa.io/en/stable/installation/) | 24.2+ |
