@@ -124,6 +124,28 @@ class RequestsHasCorrectContentTest(TestCase):
         self.assertEventContent(response)
         self.assertNotContains(response, self.event_foo)
 
+    def test_post_method_for_tasks(self):
+        task_post_test = {"title": "Post test", "date": "2024-01-01"}
+        response = self.client.post(
+            "/api/v1/tasks/",
+            json.dumps(task_post_test),
+            content_type="application/json",
+        )
+
+        self.assertContains(response, task_post_test["title"], status_code=201)
+        self.assertContains(response, task_post_test["date"], status_code=201)
+
+    def test_post_method_for_events(self):
+        event_post_test = {"summary": "Post test", "date": "2024-01-01"}
+        response = self.client.post(
+            "/api/v1/events/",
+            json.dumps(event_post_test),
+            content_type="application/json",
+        )
+
+        self.assertContains(response, event_post_test["summary"], status_code=201)
+        self.assertContains(response, event_post_test["date"], status_code=201)
+
     def test_put_method_for_tasks(self):
         task_put_test = {"title": "Put test", "date": "2024-02-02"}
         response = self.client.put(
