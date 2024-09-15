@@ -13,17 +13,17 @@ To achieve all of this, it was used Python as the base programming language, Dja
 | Pip | [Pip's official documentation](https://pip.pypa.io/en/stable/installation/) | 24.2+ |
 | Git | [Git's official download page](https://git-scm.com/downloads) | any |
 ### Install
-Open a ```Terminal``` instance and then follow the steps below:
-```bash
-git clone https://github.com/crespo/task-to-google-calendar.git
-cd task-to-google-calendar/
-python3 -m venv env
-source env/bin/activate
-python3 -m pip install -r requirements.txt
-cd taskmaker/
-python3 manage.py makemigrations api
-python3 manage.py migrate api
-python3 manage.py runserver
+Open a ```Terminal``` instance and then follow these steps:
+```
+$ git clone https://github.com/crespo/task-to-google-calendar.git
+$ cd task-to-google-calendar/
+$ python -m venv env
+$ source env/bin/activate
+$ pip install -r requirements.txt
+$ cd taskmaker/
+$ python manage.py makemigrations api
+$ python manage.py migrate api
+$ python manage.py runserver
 ```
 After successfully running the server, do the [Set up your environment](https://developers.google.com/calendar/api/quickstart/python#set-up-environment) tutorial from Google's API activation tutorial and import the ```credentials.json``` to both ```./taskmaker/api/creds/google-calendar/``` and ```./taskmaker/api/creds/google-tasks/``` directories and you're good to go!
 ## Usage
