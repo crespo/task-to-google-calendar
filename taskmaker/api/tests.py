@@ -100,6 +100,16 @@ class RequestsHasCorrectContentTest(TestCase):
 
         self.assertEventContent(response)
 
+    def test_root_endpoint_search_query_has_task(self):
+        response = self.client.get("/api/v1/tasks/?search=rst")
+
+        self.assertContains(response, self.task.title)
+
+    def test_root_endpoint_search_query_has_event(self):
+        response = self.client.get("/api/v1/events/?search=rst")
+
+        self.assertContains(response, self.event.summary)
+
     def test_retrieve_endpoint_for_tasks_has_task(self):
         response = self.client.get(f"/api/v1/tasks/{self.task.id}/")
 
