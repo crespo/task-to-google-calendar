@@ -8,6 +8,9 @@ class Task(models.Model):
     time = models.TimeField(null=True, blank=True)
     task_id = models.CharField(max_length=100, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Event(models.Model):
     summary = models.CharField(max_length=100)
@@ -16,3 +19,6 @@ class Event(models.Model):
     time_start = models.TimeField(null=True, blank=True)
     time_end = models.TimeField(null=True, blank=True)
     event_id = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.summary
