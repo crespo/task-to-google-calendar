@@ -134,6 +134,7 @@ class RequestsHasCorrectContentTest(TestCase):
 
         self.assertContains(response, task_post_test["title"], status_code=201)
         self.assertContains(response, task_post_test["date"], status_code=201)
+        self.assertEqual(Task.objects.count(), 3)
 
     def test_post_method_for_events(self):
         event_post_test = {"summary": "Post test", "date": "2024-01-01"}
@@ -145,6 +146,7 @@ class RequestsHasCorrectContentTest(TestCase):
 
         self.assertContains(response, event_post_test["summary"], status_code=201)
         self.assertContains(response, event_post_test["date"], status_code=201)
+        self.assertEqual(Event.objects.count(), 3)
 
     def test_put_method_for_tasks(self):
         task_put_test = {"title": "Put test", "date": "2024-02-02"}
@@ -177,6 +179,22 @@ class RequestsHasCorrectContentTest(TestCase):
 
         self.assertContains(response, event_put_test["summary"])
         self.assertContains(response, event_put_test["date"])
+
+    def test_delete_method_for_tasks(self):
+        self.assertEqual(Task.objects.count(), 2)
+
+        response = self.client.delete(f"/api/v1/tasks/{self.task.id}/")
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Task.objects.count(), 1)
+
+    def test_delete_method_for_events(self):
+        self.assertEqual(Event.objects.count(), 2)
+
+        response = self.client.delete(f"/api/v1/events/{self.event.id}/")
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Event.objects.count(), 1)
 
     def assertTaskContent(self, response):
         self.assertContains(response, self.task)
