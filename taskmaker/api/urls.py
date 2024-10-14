@@ -19,8 +19,14 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    #
+    # JWT endpoints
+    #
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    #
+    # Tasks-related endpoints
+    #
     path("tasks/", views.TaskView.as_view(), name="task-list-create-view"),
     re_path(
         r"tasks/(?P<start_date>\d{4}-\d{2}-\d{2})/(?P<end_date>\d{4}-\d{2}-\d{2})/$",
@@ -32,6 +38,9 @@ urlpatterns = [
         views.TaskRetrieveUpdateDestroyView.as_view(),
         name="task-retrieve-update-destroy-view",
     ),
+    #
+    # Events-related endpoints
+    #
     path("events/", views.EventView.as_view(), name="event-list-create-view"),
     re_path(
         r"events/(?P<start_date>\d{4}-\d{2}-\d{2})/(?P<end_date>\d{4}-\d{2}-\d{2})/$",
@@ -43,6 +52,9 @@ urlpatterns = [
         views.EventRetrieveUpdateDestroyView.as_view(),
         name="event-retrieve-update-destroy-view",
     ),
+    #
+    # Docs endpoints
+    #
     path(
         "swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),
