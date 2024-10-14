@@ -5,7 +5,7 @@ from .models import Task, Event
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ["id", "title", "notes", "date", "time", "task_id"]
+        fields = ["id", "user", "title", "notes", "date", "time", "task_id"]
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -13,6 +13,7 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = [
             "id",
+            "user",
             "summary",
             "description",
             "date",
