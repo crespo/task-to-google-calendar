@@ -151,6 +151,7 @@ class EventView(APIView):
             else:
                 request_data["event_id"] = CREATE_EVENT_RESPONSE["id"]
 
+        request_data["user"] = request.user.id
         serializer = EventSerializer(data=request_data)
 
         if serializer.is_valid():
