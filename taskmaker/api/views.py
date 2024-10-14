@@ -4,12 +4,17 @@ from .models import Task, Event
 from .serializers import TaskSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .services.TaskManager import TaskManager, TaskBuilder
 from .services.EventManager import EventManager, EventBuilder
 from googleapiclient.errors import HttpError
 
 
 class TaskView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         search = request.query_params.get("search", "")
 
@@ -56,6 +61,9 @@ class TaskView(APIView):
 
 
 class TaskByDateRangeListView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     serializer_class = TaskSerializer
 
     def get_queryset(self):
@@ -66,6 +74,9 @@ class TaskByDateRangeListView(generics.ListAPIView):
 
 
 class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     lookup_field = "pk"
@@ -101,6 +112,9 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class EventView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         search = request.query_params.get("search", "")
 
@@ -148,6 +162,9 @@ class EventView(APIView):
 
 
 class EventByDateRangeListView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     serializer_class = EventSerializer
 
     def get_queryset(self):
@@ -158,6 +175,9 @@ class EventByDateRangeListView(generics.ListAPIView):
 
 
 class EventRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     lookup_field = "pk"
