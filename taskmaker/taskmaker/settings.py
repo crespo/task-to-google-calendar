@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     "google",
     "googleapiclient",
     "drf_yasg",
+    "authuser",
 ]
+
+AUTH_USER_MODEL = "authuser.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
