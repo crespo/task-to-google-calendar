@@ -19,9 +19,11 @@ class TaskView(APIView):
         search = request.query_params.get("search", "")
 
         if search:
-            tasks = Task.objects.filter(title__icontains=search)
+            tasks = Task.objects.filter(
+                user_id=request.user.id, title__icontains=search
+            )
         else:
-            tasks = Task.objects.all()
+            tasks = Task.objects.filter(user_id=request.user.id)
 
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -50,6 +52,7 @@ class TaskView(APIView):
             else:
                 request_data["task_id"] = CREATE_TASK_RESPONSE["id"]
 
+        request_data["user"] = request.user.id
         serializer = TaskSerializer(data=request_data)
 
         if serializer.is_valid():
@@ -70,31 +73,34 @@ class TaskByDateRangeListView(generics.ListAPIView):
         start_date = self.kwargs.get("start_date")
         end_date = self.kwargs.get("end_date")
 
-        return Task.objects.filter(date__range=[start_date, end_date])
+        return Task.objects.filter(
+            user_id=self.request.user.id, date__range=[start_date, end_date]
+        )
 
 
 class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
     lookup_field = "pk"
 
-    def get_object(self, pk):
+    def get_queryset(self):
+        return Task.objects.filter(user_id=self.request.user.id)
+
+    def get_object(self, request, pk):
         try:
-            return Task.objects.get(pk=pk)
+            return Task.objects.get(pk=pk, user_id=request.user.id)
         except Task.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        task = self.get_object(pk)
+        task = self.get_object(pk, request)
         serializer = TaskSerializer(task)
 
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        task = self.get_object(pk)
+        task = self.get_object(pk, request)
         serializer = TaskSerializer(task, data=request.data)
 
         if serializer.is_valid():
@@ -104,7 +110,7 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        task = self.get_object(pk)
+        task = self.get_object(pk, request)
         TaskManager.deleteTask(task.task_id)
         task.delete()
 
@@ -119,9 +125,11 @@ class EventView(APIView):
         search = request.query_params.get("search", "")
 
         if search:
-            events = Event.objects.filter(summary__icontains=search)
+            events = Event.objects.filter(
+                user_id=request.user.id, summary__icontains=search
+            )
         else:
-            events = Event.objects.all()
+            events = Event.objects.filter(user_id=request.user.id)
 
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -172,31 +180,34 @@ class EventByDateRangeListView(generics.ListAPIView):
         start_date = self.kwargs.get("start_date")
         end_date = self.kwargs.get("end_date")
 
-        return Event.objects.filter(date__range=[start_date, end_date])
+        return Event.objects.filter(
+            user_id=self.request.user.id, date__range=[start_date, end_date]
+        )
 
 
 class EventRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
-    queryset = Event.objects.all()
     serializer_class = EventSerializer
     lookup_field = "pk"
 
-    def get_object(self, pk):
+    def get_queryset(self):
+        return Event.objects.filter(user_id=self.request.user.id)
+
+    def get_object(self, request, pk):
         try:
-            return Event.objects.get(pk=pk)
+            return Event.objects.get(pk=pk, user_id=request.user.id)
         except Event.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        event = self.get_object(pk)
+        event = self.get_object(pk, request)
         serializer = EventSerializer(event)
 
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        event = self.get_object(pk)
+        event = self.get_object(pk, request)
         serializer = EventSerializer(event, data=request.data)
 
         if serializer.is_valid():
@@ -206,7 +217,7 @@ class EventRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        event = self.get_object(pk)
+        event = self.get_object(pk, request)
         EventManager.deleteEvent(event.event_id)
         event.delete()
 
