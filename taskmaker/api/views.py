@@ -194,20 +194,20 @@ class EventRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Event.objects.filter(user_id=self.request.user.id)
 
-    def get_object(self, request, pk):
+    def get_object(self, pk):
         try:
-            return Event.objects.get(pk=pk, user_id=request.user.id)
+            return Event.objects.get(pk=pk, user_id=self.request.user.id)
         except Event.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        event = self.get_object(pk, request)
+        event = self.get_object(pk)
         serializer = EventSerializer(event)
 
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        event = self.get_object(pk, request)
+        event = self.get_object(pk)
         serializer = EventSerializer(event, data=request.data)
 
         if serializer.is_valid():
@@ -217,7 +217,7 @@ class EventRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        event = self.get_object(pk, request)
+        event = self.get_object(pk)
         EventManager.deleteEvent(event.event_id)
         event.delete()
 
